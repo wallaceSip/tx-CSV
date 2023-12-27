@@ -45,7 +45,7 @@ Replace \`csvCreator.js\` with the name of your main script file , if you change
 
 ### Schedule with \`node-cron\`
 
-You can schedule the script to run automatically every day at 05:00 AM UTC-3 using \`node-cron\`. Ensure you have the \`cron.schedule\` function set up in your script to automate this.
+You can schedule the script to run automatically every day at 05:00 AM UTC using \`node-cron\`. Ensure you have the \`cron.schedule\` function set up in your script to automate this.
 
 \`\`\`javascript
 // Schedule the task to run every day at 05:00
@@ -54,6 +54,6 @@ cron.schedule('0 5 * * *', async () => {
   await main();
 }, {
   scheduled: true,
-  timezone: 'UTC-3'
+  timezone: 'UTC'
 });
 \`\`\`

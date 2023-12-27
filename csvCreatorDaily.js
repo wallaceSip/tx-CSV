@@ -1,5 +1,6 @@
 const Web3 = require('web3');
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
+const cron = require('node-cron');
 //load env file
 require('dotenv').config()
 
@@ -116,7 +117,7 @@ async function getUSDTTransferEvents(dayblocks,currentBlockNumber) {
   // Array to store transactions
   let transactions = [];
 
-  while (toBlock <= latestBlockNumber) {
+  while (toBlock <= currentBlockNumber) {
     try {
       // Get all Transfer events in the current batch range
       const events = await usdtContract.getPastEvents('Transfer', {
@@ -215,11 +216,14 @@ async function main() {
   }
 }
 
+console.log("starting script");
+console.log('Running the task at 05:00AM UTC every day.');
 // Schedule the task to run every day at 05:00
 cron.schedule('0 5 * * *', async () => {
-  console.log('Running the task at 05:00AM every day.');
+  const currentDate = new Date().toLocaleString(); 
+  console.log(`[${currentDate}] executing main function..`); 
   await main();
 }, {
   scheduled: true,
-  timezone: 'UTC-3'
+  timezone: 'UTC'
 });
