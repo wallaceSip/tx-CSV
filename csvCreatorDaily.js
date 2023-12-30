@@ -254,13 +254,11 @@ async function main() {
 console.log("starting script");
 console.log('Running the task at 05:00AM UTC every day.');
 // Schedule the task to run every day at 05:00
-// cron.schedule('0 5 * * *', async () => {
+ cron.schedule('0 5 * * *', async () => {
   const currentDate = new Date().toLocaleString(); 
   console.log(`[${currentDate}] executing main function..`); 
   main();
-  /*
 }, {
   scheduled: true,
   timezone: 'UTC'
 });
-*/
