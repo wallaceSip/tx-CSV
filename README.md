@@ -29,6 +29,9 @@ This Node.js script tracks USDT (Tether) transfer events on the Ethereum blockch
     ORIGIN_HTTPS_ENDPOINT=<Your Ethereum Node URL>
     ADDRESS_TO_CHECK=<Address to track>
     USDT_TOKEN_CONTRACT_ADDRESS=<USDT Token Contract Address>
+    EMAIL_USERNAME=<Your email username>
+    EMAIL_PASSWORD=<Your email generated app password>
+    RECIPIENT_EMAIL=<Email that will receive the CSV>
 
 
 ## Execution

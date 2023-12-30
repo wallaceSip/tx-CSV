@@ -1,5 +1,6 @@
 const Web3 = require('web3');
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
+const nodemailer = require('nodemailer');
 const cron = require('node-cron');
 //load env file
 require('dotenv').config()
@@ -200,6 +201,39 @@ async function exportToCSV(transactions, filename) {
   console.log(`CSV file ${filename} has been created successfully.`);
 }
 
+async function sendEmailWithAttachment(filename) {
+  try {
+    // Create a Nodemailer transporter
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL_USERNAME,  
+        pass: process.env.EMAIL_PASSWORD  
+      }
+    });
+
+    // Define email options
+    const mailOptions = {
+      from: process.env.EMAIL_USERNAME,
+      to: process.env.RECIPIENT_EMAIL,  
+      subject: `Truther HOT USDT Transactions - ${new Date().toISOString().slice(0, 10)}`,
+      text: 'Segue o arquivo CSV com as transações do dia de 5am UTC - 5am UTC.',
+      attachments: [
+        {
+          filename: filename,
+          path: `./${filename}`
+        }
+      ]
+    };
+
+    // Send email
+    const info = await transporter.sendMail(mailOptions);
+    console.log(`Email sent: ${info.response}`);
+  } catch (error) {
+    console.error('Error on sending email:', error.message);
+  }
+}
+
 async function main() {
   try {
     const web3 = new Web3(nodeUrl);
@@ -211,6 +245,7 @@ async function main() {
     const filename = `transactions_${currentDate}.csv`;
 
     await exportToCSV(transactions, filename);
+    await sendEmailWithAttachment(filename);
   } catch (error) {
     console.error('Error:', error.message);
   }
@@ -219,11 +254,13 @@ async function main() {
 console.log("starting script");
 console.log('Running the task at 05:00AM UTC every day.');
 // Schedule the task to run every day at 05:00
-cron.schedule('0 5 * * *', async () => {
+// cron.schedule('0 5 * * *', async () => {
   const currentDate = new Date().toLocaleString(); 
   console.log(`[${currentDate}] executing main function..`); 
-  await main();
+  main();
+  /*
 }, {
   scheduled: true,
   timezone: 'UTC'
 });
+*/
